@@ -13,7 +13,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
     {
         public UnfilledPacketException() 
         {
-            Program.log.Error("Packet is not complete!");
+            Program.log.TraceDbg("Packet is not complete!");
         }
     }
     
@@ -22,7 +22,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
     {
         public OverflowPacketException()
         {
-            Program.log.Error("Packet is alreay full!");
+            Program.log.TraceDbg("Packet is alreay full!");
         }
     }
 
@@ -30,7 +30,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
     {
         public DataIntegrityException()
         {
-            Program.log.Error("Checksum is not respected! Potential issue related to data integrity.");
+            Program.log.TraceDbg("Checksum is not respected! Potential issue related to data integrity.");
         }
     }
 

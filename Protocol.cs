@@ -45,12 +45,11 @@ namespace Sigma.Tool.UPS.DiagnosticData
         //Doc: https://learn.microsoft.com/it-it/dotnet/api/system.io.ports.serialport?view=dotnet-plat-ext-8.0
         SerialPort port = new SerialPort();
         SerialPortSettings settings;
-
-
         EventWaitHandle waitiforData = new EventWaitHandle(false, EventResetMode.ManualReset);
         static BlockingCollection<byte[]> buffer = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>(), 10); /*10 is the capacity*/
         CancellationTokenSource cts = new CancellationTokenSource();
         //private object padlock = new object();
+
 
 
         public Protocol() {
@@ -155,7 +154,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
             int realLenght = port.Read(data, 0, data.Length);
             if (realLenght != 0)
             {
-                Program.log.Info($"\n\tpacket received of length: {realLenght}");
+                Program.log.TraceDbg($"\n\tpacket received of length: {realLenght}");
                 PrintArray(data, realLenght);
                 byte[] subArray = new byte[realLenght];
                 Array.Copy(data, 0, subArray, 0, realLenght);
@@ -165,19 +164,19 @@ namespace Sigma.Tool.UPS.DiagnosticData
 
         private bool ReadBuffer(ResponsePacket packet)
         {
-            Program.log.Info("Reading buffer thread started");
+            Program.log.TraceDbg("Reading buffer thread started");
             try
             {
                 foreach (byte[] items in buffer.GetConsumingEnumerable(cts.Token))
                 {
-                    Program.log.Info("\tI'm reading.");
+                    Program.log.TraceDbg("\tI'm reading.");
                     foreach (byte b in items)
                     {
                         ReadingState state = packet.AddByte(b);
                         if (state == ReadingState.End)
                         {
                             waitiforData.Set();
-                            Program.log.Info("\nReading buffer thread ended successfully");
+                            Program.log.TraceDbg("\nReading buffer thread ended successfully");
                             return true;
                         }
                     }
@@ -189,11 +188,11 @@ namespace Sigma.Tool.UPS.DiagnosticData
                // {
                     cts = new CancellationTokenSource(); // "Reset" the cancellation token source...
                 //}
-                Program.log.Error("\tReading buffer thread ended due to timeout");
+                Program.log.TraceDbg("\tReading buffer thread ended due to timeout");
                 return false;
             }
             catch (Exception ex) {
-                Program.log.Error(ex.ToString());
+                Program.log.TraceDbg(ex.ToString());
                 return false;
             }            
             return false;

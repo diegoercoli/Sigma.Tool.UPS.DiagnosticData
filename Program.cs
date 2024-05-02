@@ -19,7 +19,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
 {
     internal class Program
     {
-        internal static readonly ILog log = LogManager.GetLogger(typeof(Program));
+        public static Sigma.Utility.Logger.Logger log;
 
         static List<(RequestPacket, ResponsePacket)> initCommunicationPackets(){
             return new List<(RequestPacket, ResponsePacket)>
@@ -39,12 +39,9 @@ namespace Sigma.Tool.UPS.DiagnosticData
 
         static void Main()
         {
-            /*
             Sigma.Utility.Logger.Factory.Factory.BasicConfigure();
-            Sigma.Utility.Logger.Logger myLog =  Sigma.Utility.Logger.Factory.Factory.GetInstance("Sigma.Tool.UPS.DiagnosticData.log");
-            myLog.TraceDbg("Start Log");
-            */
-           // myLog.TraceDbgFormat();
+            log =  Sigma.Utility.Logger.Factory.Factory.GetInstance("Sigma.Tool.UPS.DiagnosticData.log");
+            log.TraceDbg("Start Log");
             Sigma.Utility.Platform.PlatformDriver plt = new Sigma.Utility.Platform.PlatformDriver();
             string filePathConfig = string.Format("{0}\\Device\\Sigma.Tool.UPS.DiagnosticData.Config.Configuration.xml", plt.PathAppData);
             Configuration myConfig = Sigma.Utility.Xml.XmlHandler<Configuration>.DeserializeFromXml(filePathConfig, null);
@@ -66,19 +63,21 @@ namespace Sigma.Tool.UPS.DiagnosticData
                     bool success; //= false;
                     do
                     {
-                        log.Info($"\nAttempt {attempt} elaborating command {requestPacket.Cmd}");
+                        log.TraceDbg($"\nAttempt {attempt} elaborating command {requestPacket.Cmd}");
                         //Invia richiesta primo comando
                         success = prot.SendReceiveData(requestPacket, responsePacket);
                     } while (!success && attempt++ <= 3);
                     if (!success)
                     {
                         unsuccesful_commands.Add(commandName);
-                        log.Error($"\tFailed to process command {commandName}");
+                        log.TraceDbg($"\tFailed to process command {commandName}");
                     }
                     else
                     {
                         string jsonObject = responsePacket.ToString();
-                        log.Info($"\nPacket content correctily parsed: {jsonObject}");
+                        Func<string, string> cleanForLog = (x) => x.Replace("{","").Replace("}","");
+
+                        log.TraceDbg($"\nPacket content correctily parsed: {cleanForLog(jsonObject)}"); //jsonObject
                     }
                     //In case of failure, it will put an empty json object. 
                     //This will translate into fields of null values in the CSV record.
@@ -88,6 +87,8 @@ namespace Sigma.Tool.UPS.DiagnosticData
                 //All information are read, we can now translate list of JsonObjects into CSV file.
                 CustomUtility.writeToCsv(parsedJsonObjects, myConfig.OutputFolder + "UPS_Protocol.csv"); //"csv/UPS_Protocol.csv"
             }
+            log.Dispose();
+            Console.Write("Please press any key to exit...");
             Console.ReadKey();
         }
     }

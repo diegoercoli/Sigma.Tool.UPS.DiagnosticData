@@ -72,7 +72,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
                         readingState = ReadingState.Header;
                     else
                     {
-                        Program.log.Error("$\"Expected code {STX} at the beginning of the command, but received instead {rawbyte}.\"");
+                        Program.log.TraceDbg("$\"Expected code {STX} at the beginning of the command, but received instead {rawbyte}.\"");
                         throw new ArgumentException($"Expected code {STX} at the beginning of the command, " +
                                                    $"but received instead {rawbyte}.");                    }
                        
@@ -123,12 +123,12 @@ namespace Sigma.Tool.UPS.DiagnosticData
         {
             if (word.Length != wordSize)
             {
-                Program.log.Error($"Length of word {word.Length} is different from the expected word size {wordSize}");
+                Program.log.TraceDbg($"Length of word {word.Length} is different from the expected word size {wordSize}");
                 throw new ArgumentException($"Length of word {word.Length} is different from the expected word size {wordSize}");
             }
             if (wordSize != 2)
             {
-               Program.log.Error("Method decodeWord can only deal with word of length 2.");
+               Program.log.TraceDbg("Method decodeWord can only deal with word of length 2.");
                throw new NotSupportedException("Method decodeWord can only deal with word of length 2.");
             }
             int value = (word[1] << 8) | word[0];
@@ -148,12 +148,12 @@ namespace Sigma.Tool.UPS.DiagnosticData
             byte[] rawData = this.Data.ToArray();
             FieldInfo[] fields = ReadChildFields();
             int lowerIndex = 0;
-            Program.log.Info("\n\nGetting fields to fill using Reflection:\n");
+            Program.log.TraceDbg("\n\nGetting fields to fill using Reflection:\n");
             foreach (var field in fields)
             {
                 int sizeInByte = GetFieldSize(field);
                 string type = field.FieldType.Name.Split('.').Last();
-                Program.log.Info($"\tField: {field.Name}, Type: {type}, Size: {sizeInByte} bytes");                
+                Program.log.TraceDbg($"\tField: {field.Name}, Type: {type}, Size: {sizeInByte} bytes");                
                 byte[] subarray = new byte[sizeInByte];
                 Array.Copy(rawData, lowerIndex, subarray, 0, sizeInByte);
                 lowerIndex += sizeInByte;
