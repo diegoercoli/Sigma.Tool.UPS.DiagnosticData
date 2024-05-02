@@ -1,0 +1,36 @@
+UPS_INFO_READ
+{
+    /***** STX *****/
+    2,
+    /***** Data Length  *****/
+    20,
+    /***** Data *****/
+    0,    // Command
+    18,   // Model
+    1,    // Configuration
+
+    // Maximum active power (W)
+    188,  // Word Less significant byte  -> BC
+    2,    // Word Most significant byte  -> 2  ->  2BC=700
+	
+    // Firmware  
+    1,    // Firmware version
+    4,    // Firmware subversion
+
+    // Serial Number
+    48,  //ascii code for 0 
+    48,  //ascii code for 0 
+    48,  //ascii code for 0 
+    48,  //ascii code for 0 
+    48,  //ascii code for 0 
+    48,  //ascii code for 0 
+    48,  //ascii code for 0 
+    48,  //ascii code for 0 
+    48,  //ascii code for 0 
+    48,  //ascii code for 0
+    48,  //ascii code for 0
+    48,  //ascii code for 0
+
+    /***** Checksum *****/
+    42    
+};
