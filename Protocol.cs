@@ -192,7 +192,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
                 return false;
             }
             catch (Exception ex) {
-                Program.log.TraceDbg(ex.ToString());
+                Program.log.TraceErr(ex.ToString());
                 return false;
             }            
             return false;
@@ -218,7 +218,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
             }          
             catch (Exception ex)
             {
-                Program.log.Error(ex.ToString());
+                Program.log.TraceException("SendReceiveData",ex);
             }
             Task.WaitAll(t);
             return bRet;

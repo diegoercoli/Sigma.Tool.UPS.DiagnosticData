@@ -22,7 +22,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
             // Ensure that the byte array length is divisible by 4 to form complete integers
             if (byteArray.Length % 4 != 0)
             {
-                Program.log.TraceDbg("Byte array length must be divisible by 4.");
+                Program.log.TraceErr("Byte array length must be divisible by 4.");
                 throw new ArgumentException("Byte array length must be divisible by 4.");
             }
 

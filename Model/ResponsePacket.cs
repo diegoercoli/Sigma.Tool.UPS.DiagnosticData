@@ -72,7 +72,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
                         readingState = ReadingState.Header;
                     else
                     {
-                        Program.log.TraceDbg("$\"Expected code {STX} at the beginning of the command, but received instead {rawbyte}.\"");
+                        Program.log.TraceErr("$\"Expected code {STX} at the beginning of the command, but received instead {rawbyte}.\"");
                         throw new ArgumentException($"Expected code {STX} at the beginning of the command, " +
                                                    $"but received instead {rawbyte}.");                    }
                        
@@ -123,7 +123,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
         {
             if (word.Length != wordSize)
             {
-                Program.log.TraceDbg($"Length of word {word.Length} is different from the expected word size {wordSize}");
+                Program.log.TraceErr($"Length of word {word.Length} is different from the expected word size {wordSize}");
                 throw new ArgumentException($"Length of word {word.Length} is different from the expected word size {wordSize}");
             }
             if (wordSize != 2)
