@@ -8,8 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
-using log4net.Config;
-using log4net;
 using Sigma.Tool.UPS.DiagnosticData.Config;
 using Sigma.Utility.Logger;
 using Sigma.Utility.Platform;
@@ -70,7 +68,7 @@ namespace Sigma.Tool.UPS.DiagnosticData
                 Configuration myConfig = Sigma.Utility.Xml.XmlHandler<Configuration>.DeserializeFromXml(filePathConfig, null);
                 var outputFolder = GetOuputPath(plt,myConfig.OutputFolder);
                 Console.WriteLine(outputFolder);
-                Log4NetConfigurator.configure(plt.PathLog + "\\UPS_console_log.txt");
+                //Log4NetConfigurator.configure(plt.PathLog + "\\UPS_console_log.txt");
                 Protocol prot = new Protocol(myConfig.SerialPortSettings);
                 var tupleList = initCommunicationPackets();
                 HashSet<ProtCommand> unsuccesful_commands = new HashSet<ProtCommand>();
